@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Materi Elektro</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .active-menu {
+      @apply bg-blue-600 text-white;
+    }
+    body {
+      background-image: url('https://cdn.pixabay.com/photo/2020/02/04/10/57/lightning-4819114_1280.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .bg-overlay {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border: 2px solid #3b82f6;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+      z-index: 50;
+      width: 300px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .popup h3 {
+      font-weight: 700;
+      color: #1e40af;
+    }
+    .popup button {
+      background-color: #3b82f6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .popup .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-weight: bold;
+      color: #1e40af;
+      cursor: pointer;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #judul.beranda {
+      font-family: 'Times New Roman', Times, serif;
+      text-align: center;
+      font-size: 2rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body class="text-gray-800 font-sans">
+  <div class="flex min-h-screen bg-overlay relative">
+    <!-- Sidebar Kiri -->
+    <aside class="w-64 bg-white shadow-lg p-4 overflow-y-auto">
+      <h1 class="flex items-center text-xl font-bold text-blue-700 mb-4 cursor-pointer" onclick="tampilkanBeranda()">
+        <img src="gambar/Logo.jpg" alt="Logo" class="w-8 h-8 mr-2" />
+        Materi Elektro
+      </h1>
+      <input type="text" id="search" placeholder="Cari materi..." class="w-full mb-4 px-3 py-2 border rounded" />
+      <ul id="menu" class="space-y-2">
+        <li><button onclick="tampilkanMateri('Komponen Dasar Elektronika', 'Tujuan Pembelajaran: Peserta didik diharapkan mampu membedakan, memproyeksikan, dan menggunakan komponen dasar elektronika dalam kehidupan sehari-hari', 'video/komponendasar.mp4', 'Rincian materi: (0:33 RESISTOR) (4:15 KAPASITOR) (7:43 DIODA) (11:56 DIODA ZENER) (14:25 TRAFO) (18:29 INDUKTOR) (22:29 TRANSISTOR) (26:29 THYRISTOR) (SCR)')" class="w-full text-left px-3 py-2 border rounded hover:bg-blue-100">KOMPONEN DASAR</button></li>
+        <li><button onclick="tampilkanMateri('Transistor', 'Penjelasan mudah', 'video/Transistor.mp4', 'Yt : Lianparl')" class="w-full text-left px-3 py-2 border rounded hover:bg-blue-100">TRANSISTOR</button></li>
+        <li><button onclick="tampilkanMateri('Dc Motor', 'Tujuan Pembelajaran: Peserta didik diharapkan mampu mendeteksi dan merancang mekanisme dari Motor DC', 'video/DCmotorwork.mp4', 'Rincian materi:(00:41 - Sirkuit) (01:22 - Magnet) (02:27 - Elektromagnet) (04:28 - Perbaikan pada Motor Listrik) (05:00 - Komutator dan Sikat) (07:19 - Peningkatan Torsi) (08:20 - Perangkat dengan Motor)')" class="w-full text-left px-3 py-2 border rounded hover:bg-blue-100">DC MOTOR</button></li>
+        <li><button onclick="tampilkanMateri('Gelang Warna', 'Tujuan Pembelajaran: Peserta didik diharapkan mampu memahami, membedakan, menganalisis, dan menggunakan 4 gelang warna dan 5 gelang warna pada resistor', 'video/gelangresistor.mp4', 'Rincian materi: (00:10 - Resistor 4 Warna 0) (2:01 - Resistor 5 Warna)')" class="w-full text-left px-3 py-2 border rounded hover:bg-blue-100">GELANG WARNA RESISTOR</button></li>
+      </ul>
+    </aside>
+
+    <!-- Konten Tengah -->
+    <main class="flex-1 p-6 overflow-y-auto">
+      <h2 id="judul" class="text-2xl font-semibold text-blue-700 mb-4"></h2>
+      <p id="deskripsi" class="mb-4"></p>
+      <div id="video-container" class="aspect-w-16 aspect-h-9">
+        <video id="video" class="w-full h-64 rounded-lg shadow" controls>
+          <source src="video/contoh.mp4" type="video/mp4">
+          Browser Anda tidak mendukung pemutar video.
+        </video>
+      </div>
+      <p id="video-deskripsi" class="mt-4 text-sm text-gray-700"></p>
+
+      <!-- Komentar -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold text-blue-700 mb-2">Komentar</h3>
+        <textarea id="komentar-input" class="w-full p-2 border rounded mb-2" placeholder="Tulis komentar..."></textarea>
+        <button onclick="tambahKomentar()" class="bg-blue-600 text-white px-4 py-2 rounded">Kirim</button>
+        <ul id="daftar-komentar" class="mt-4 space-y-2"></ul>
+      </div>
+    </main>
+
+    <!-- Sidebar Kanan -->
+    <aside class="w-64 bg-yellow-50 shadow-lg p-4 border-l overflow-y-auto">
+      <h3 class="text-lg font-semibold text-green-700 mb-2">Request</h3>
+      <textarea id="request-input" class="w-full p-2 border rounded mb-2" placeholder="Tulis permintaan materi..."></textarea>
+      <button onclick="tambahRequest()" class="bg-green-600 text-white px-4 py-2 rounded">Kirim</button>
+      <ul id="daftar-request" class="mt-4 space-y-2"></ul>
+    </aside>
+  </div>
+
+  <!-- Popup Iklan -->
+  <div id="popup-iklan" class="popup hidden">
+    <span class="close-btn" onclick="document.getElementById('popup-iklan').classList.add('hidden')">×</span>
+    <h3>follow Profil saya</h3>
+    <p>saya butuh dukungan kalian semua</p>
+    <img src="gambar/profil.jpg" alt="Kit Elektro" class="w-full h-auto my-2 rounded">
+    <a href="https://www.instagram.com/yuwandayuda?igsh=MTNpemV2bHhkeDc4cw==" target="_blank">
+      <button>Lihat Sekarang</button>
+    </a>
+  </div>
+
+  <script>
+    function tampilkanBeranda() {
+      document.getElementById('judul').textContent = "Mau belajar apa hari ini?";
+      document.getElementById('judul').classList.add("beranda");
+      document.getElementById('deskripsi').textContent = "";
+      document.getElementById('video-container').style.display = 'none';
+      document.getElementById('video-deskripsi').textContent = "";
+      document.querySelector('.mt-6').style.display = 'none';
+    }
+
+    function tampilkanMateri(judul, deskripsi, videoSrc, videoDeskripsi) {
+      document.getElementById('judul').textContent = judul;
+      document.getElementById('judul').classList.remove("beranda");
+      document.getElementById('deskripsi').textContent = deskripsi;
+      document.getElementById('video').src = videoSrc;
+      document.getElementById('video-deskripsi').textContent = videoDeskripsi;
+      document.getElementById('video-container').style.display = 'block';
+      document.querySelector('.mt-6').style.display = 'block';
+      document.getElementById('popup-iklan').classList.remove('hidden');
+    }
+
+    function tambahKomentar() {
+      const komentarInput = document.getElementById("komentar-input");
+      const daftarKomentar = document.getElementById("daftar-komentar");
+      if (komentarInput.value.trim() !== "") {
+        const li = document.createElement("li");
+        li.textContent = komentarInput.value;
+        li.className = "bg-gray-100 p-2 rounded shadow";
+        daftarKomentar.appendChild(li);
+        komentarInput.value = "";
+      }
+    }
+
+    function tambahRequest() {
+      const requestInput = document.getElementById("request-input");
+      const daftarRequest = document.getElementById("daftar-request");
+      if (requestInput.value.trim() !== "") {
+        const li = document.createElement("li");
+        li.textContent = requestInput.value;
+        li.className = "bg-yellow-100 p-2 rounded shadow";
+        daftarRequest.appendChild(li);
+        requestInput.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
+
